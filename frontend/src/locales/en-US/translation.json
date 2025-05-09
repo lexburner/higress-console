@@ -13,34 +13,134 @@
     "serviceSources": "Service Sources",
     "serviceList": "Service List",
     "routeConfig": "Route Config",
+    "aiServiceManagement": "AI Service Config",
+    "aiRouteManagement": "AI Route Config",
+    "aiDashboard": "AI Dashboard",
+    "llmProviderManagement": "LLM Provider Management",
     "domainManagement": "Domain Management",
     "certManagement": "Certificate Management",
-    "pluginMarket": "Plugin Market"
+    "consumerManagement": "Consumer Management",
+    "pluginManagement": "Plugin Management"
   },
   "index": {
     "title": "Higress Console"
+  },
+  "init": {
+    "title": "System Setup",
+    "header": "Setup Admin Account",
+    "usernamePlaceholder": "Username",
+    "usernameRequired": "Please input username",
+    "passwordPlaceholder": "Password",
+    "passwordRequired": "Please input password",
+    "confirmPasswordPlaceholder": "Re-type Password",
+    "confirmPasswordRequired": "Please re-type the password here",
+    "confirmPasswordMismatched": "Password does not match. Enter the password again here.",
+    "initSuccess": "Setup completed. Redirecting to the login page.",
+    "initFailed": "Setup operation failed."
   },
   "login": {
     "title": "Login",
     "buttonText": "Login",
     "loginSuccess": "Login successful!",
     "loginFailed": "Login failed. Please try again.",
-    "incorrectCredentials": "Incorrect username or password.",
     "autoLogin": "Auto login",
     "forgotPassword": "Forgot password",
     "usernamePlaceholder": "Username",
-    "usernameRequired": "Please input the username!",
+    "usernameRequired": "Please input username",
     "passwordPlaceholder": "Password",
-    "passwordRequired": "Please input the password!"
+    "passwordRequired": "Please input password"
+  },
+  "aiRoute": {
+    "columns": {
+      "name": "Name",
+      "domains": "Domains",
+      "upstreams": "AI Services",
+      "auth": "Request Auth",
+      "pathPredicate": "Path Match Rule",
+      "modelPredicates": "Model Match Rule"
+    },
+    "routeForm": {
+      "label": {
+        "authConfig": "Request Authentication",
+        "authConfigExtra": "If enabled, only requests containing the auth info of a selected consumer are allowed to use this route.",
+        "authConfigList": "Allowed Consumers",
+        "domain": "Domain",
+        "targetModel": "Target Model",
+        "fallbackConfig": "Token Fallback",
+        "fallbackConfigExtra": "If enabled, gateway will forward the request to the fallback service if error occurs when requesting the target service.",
+        "fallbackUpstream": "Fallback Service",
+        "name": "Name",
+        "fallbackResponseCodes": "Response codes that need fallback",
+        "serviceName": "Service Name",
+        "serviceWeight": "Weight",
+        "services": "Target Services",
+        "modelPredicates": "Model Match Rule"
+      },
+      "rule": {
+        "matchTypeRequired": "Please select a match type",
+        "matchValueRequired": "Please input the match value",
+        "modelNameRequired": "Please input the model name",
+        "serviceWeightRequired": "Please input the weight value",
+        "fallbackUpstreamRequired": "Please select the fallback service",
+        "fallbackResponseCodesRequired": "Please select the response codes that need fallback",
+        "nameRequired": "Shall only contain upper-and lower-case letters, digits, dashes (-) and dots (.). And cannot end with a dash (-) or dot (.).",
+        "targetServiceRequired": "Please select a target service",
+        "badWeightSum": "The sum of all service weights must be 100.",
+        "noUpstreams": "At least one target service is required."
+      },
+      "modelMatchType": "Model Match Type",
+      "modelMatchValue": "Match Value",
+      "byModelName": "By model name",
+      "byWeight": "By weight",
+      "addTargetService": "Add target AI service",
+      "addModelPredicate": "Add model match rule",
+      "selectModelService": "Select an AI service"
+    },
+    "create": "Create AI Route",
+    "edit": "Edit AI Route",
+    "deleteConfirmation": "Are you sure you want to delete <1>{{currentRouteName}}</1>?",
+    "authNotEnabled": "Not enabled",
+    "authEnabledWithoutConsumer": "Nobody authorized",
+    "usage": "Usage",
+    "aiRouteUsage": "AI Route Usage",
+    "aiRouteUsageContent": "You can send a test request using the command below:",
+    "searchPlaceholder": "Search routes by route name, domain, routing conditions and target providers."
+  },
+  "consumer": {
+    "columns": {
+      "name": "Name",
+      "authMethods": "Auth Methods"
+    },
+    "create": "Create Consumer",
+    "edit": "Edit Consumer",
+    "deleteConfirmation": "Are you sure you want to delete <1>{{currentConsumerName}}</1>?",
+    "consumerForm": {
+      "name": "Name",
+      "nameRequired": "Please input consumer name",
+      "tokenSourceRequired": "Please choose a token source",
+      "authTokenRequired": "Please input auth token",
+      "headerNameRequired": "Please input header name",
+      "paramNameRequired": "Please input parameter key"
+    },
+    "selectBEARER": "Authorization: Bearer ${value}",
+    "selectHEADER": "Custom HTTP Header",
+    "selectQUERY": "Query Parameter",
+    "tokenSource": "Token Source",
+    "authToken": "Auth Token",
+    "randomGeneration": "Generate",
+    "headerName": "Header Name",
+    "paramName": "Param Name",
+    "deleteSuccess": "Deleted successfully."
   },
   "domain": {
     "columns": {
       "name": "Domain",
       "protocol": "Protocol",
-      "certificate": "Certificate",
-      "action": "Action"
+      "certificate": "Certificate"
     },
+    "defaultDomain": "Default Domain",
     "createDomain": "Create Domain",
+    "editDomain": "Edit Domain",
     "deleteConfirmation": "Are you sure you want to delete <1>{{currentDomainName}}</1>?",
     "domainForm": {
       "name": "Domain",
@@ -82,17 +182,122 @@
       "item3": "We recommend you using the built-in dashboard configuration of Higress. You can input the UID of the Prometheus data source in Grafana and download the JSON configuration file for import. (<1>How to obtain the UID of a data source?</1>)",
       "item3_dataSourceId": "Prometheus Data Source UID",
       "item3_dataSourceId_required": "Please input Prometheus Data Source UID.",
+      "item3_templateType": "Template",
+      "item3_templateType_MAIN": "Generic Gateway Dashboard Template",
+      "item3_templateType_AI": "AI Gateway Dashboard Template",
       "item3_download": "Download Config File",
       "item4": "Input the HTTPS URL of Grafana is highly recommended to ensure the dashboard can be shown with in this page correctly."
     }
   },
+  "llmProvider": {
+    "columns": {
+      "type": "Type",
+      "name": "Name",
+      "tokens": "Tokens"
+    },
+    "providerTypes": {
+      "openai": "OpenAI",
+      "qwen": "Tongyi Qianwen",
+      "moonshot": "Moonshot",
+      "ai360": "360 Zhinao|",
+      "azure": "Azure OpenAI",
+      "baichuan": "Baichuan AI",
+      "baidu": "ERNIE Bot",
+      "claude": "Anthropic Claude",
+      "cloudflare": "Cloudflare Workers AI",
+      "cohere": "Cohere",
+      "coze": "Coze",
+      "deepl": "DeepL",
+      "deepseek": "DeepSeek",
+      "doubao": "Doubao",
+      "gemini": "Google Gemini",
+      "github": "GitHub Models",
+      "groq": "Groq",
+      "hunyuan": "Tencent Hunyuan",
+      "minimax": "MiniMax",
+      "mistral": "Mistral",
+      "ollama": "Ollama",
+      "together-ai": "Together AI",
+      "stepfun": "Stepfun",
+      "spark": "iFlyTek Spark",
+      "yi": "01.AI",
+      "zhipuai": "Zhipu AI"
+    },
+    "providerForm": {
+      "label": {
+        "type": "LLM Provider",
+        "failoverEnabled": "Token Failover",
+        "failoverEnabledExtra": "If enabled, when the count of failed requests with a certain auth token exceeds the threshold, Higress will no long send requests with it, until following health check requests get a certain number of successes.",
+        "failureThreshold": "Min Consecuitive Failures to Mark Down a Token",
+        "healthCheckInterval": "Health Check Request Interval (ms)",
+        "healthCheckModel": "Health Check Request LLM Model",
+        "healthCheckTimeout": "Health Check Request Timeout (ms)",
+        "protocol": "Request Procotol",
+        "serviceName": "Service Name",
+        "successThreshold": "Min Consecuitive Sucesses to Mark Up a Token",
+        "azureServiceUrl": "Azure Service URL",
+        "ollamaServerHost": "Ollama Service Host",
+        "ollamaServerPort": "Ollama Service Port",
+        "openaiServerType": "OpenAI Service Type",
+        "openaiCustomUrl": "Custom OpenAI Service Base URL",
+        "awsRegion": "AWS Region",
+        "awsAccessKey": "AWS Access Key ID",
+        "awsSecretKey": "AWS Secret Access Key"
+      },
+      "rules": {
+        "tokenRequired": "Please input auth token",
+        "typeRequired": "Please select a LLM provider",
+        "serviceNameRequired": "Please input service name",
+        "failureThresholdRequired": "Please input min consecuitive failures to mark down a token",
+        "healthCheckTimeoutRequired": "Please input health check request timeout (ms)",
+        "healthCheckIntervalRequired": "Please input health check request interval (ms)",
+        "healthCheckModelRequired": "Please input health check request LLM model",
+        "protocol": "Please select a request protocol",
+        "successThresholdRequired": "Please input min consecuitive sucesses to mark up a token",
+        "azureServiceUrlRequired": "Please input Azure service URL",
+        "ollamaServerHostRequired": "Please input Ollama service host",
+        "ollamaServerPortRequired": "Please input Ollama service port",
+        "openaiCustomUrlRequired": "Please input a valid custom OpenAI service base URL",
+        "awsRegionRequired": "Please input AWS Region",
+        "awsAccessKeyRequired": "Please input AWS Access Key ID",
+        "awsSecretKeyRequired": "Please input AWS Secret Access Key"
+      },
+      "placeholder": {
+        "azureServiceUrlPlaceholder": "It shall contain \"/chat/completions\" in the path and \"api-version\" in the query string",
+        "ollamaServerHostPlaceholder": "Please input a hostname, domain name or IP address",
+        "openaiCustomUrlPlaceholder": "Sample: https://api.openai.com/v1"
+      },
+      "openaiServerType": {
+        "official": "OpenAI Official Service",
+        "custom": "Custom Service"
+      }
+    },
+    "create": "Create AI Service Provider",
+    "edit": "Edit AI Service Provider",
+    "deleteConfirmation": "Are you sure you want to delete <1>{{currentLlmProviderName}}</1>?"
+  },
   "plugins": {
     "title": "Strategy Configuration",
+    "description": "Strategy Description",
     "subTitle": {
       "domain": "Domain Name: ",
-      "route": "Route Name: "
+      "route": "Route Name: ",
+      "aiRoute": "AI Route Name: "
     },
+    "categories": {
+      "route": "Route",
+      "ai": "AI",
+      "auth": "Authentication",
+      "security": "Security",
+      "traffic": "Traffic",
+      "transform": "Transformation",
+      "o11y": "Observability",
+      "custom": "Custom"
+    },
+    "enabled": "Enabled",
+    "emptyPlugins": "No plugins configured.",
     "addPlugin": "Add Plugin",
+    "editPlugin": "Edit Plugin",
     "addSuccess": "Added successfully.",
     "updateSuccess": "Updated successfully.",
     "deleteConfirmation": "Confirm delete operation?",
@@ -102,7 +307,7 @@
       "targetDomain": "Target Domain: ",
       "targetRoute": "Target Route: ",
       "enableStatus": "Enabled",
-      "dataEditor": "Configuration Editor - YAML"
+      "globalConfigWarning": "Note: Configurations above will be applied to all domains the routes. Please edit with caution."
     },
     "builtIns": {
       "rewrite": {
@@ -129,7 +334,11 @@
         "set": "Set",
         "remove": "Remove",
         "action": "Action",
-        "addNewRule": "Add New Rule"
+        "addNewRule": "Add New Rule",
+        "headerTypeRequired": "Please select header type",
+        "actionTypeRequired": "Please select action type",
+        "keyRequired": "Please input header key",
+        "valueRequired": "Please input header value"
       },
       "cors": {
         "allowOrigins": "Allow Origins",
@@ -176,21 +385,31 @@
       "phase": "Plugin Execution Phase",
       "phasePlaceholder": "The sequence of phases: AuthN > AuthZ > Stats > Default",
       "priority": "Plugin Execution Priority",
-      "priorityPlaceholder": "Range from 1 to 1000. Plugins with a larger priority will execute first."
+      "priorityPlaceholder": "Range from 1 to 1000. Plugins with a larger priority will execute first.",
+      "imagePullPolicy": "Plugin Pull Policy",
+      "imagePullSecret": "Plugin Pull Secret",
+      "imagePullSecretPlaceholder": ""
     },
     "phases": {
       "unspecified": "Default",
       "authn": "AuthN",
       "authz": "AuthZ",
       "stats": "Stats"
+    },
+    "imagePullPolicy": {
+      "unspecified": "Default",
+      "ifNotPresent": "IfNotPresent",
+      "always": "Always"
     }
   },
   "service": {
     "columns": {
-      "name": "Service Name",
+      "name": "Service Name (FQDN)",
+      "port": "Port",
       "namespace": "Namespace",
-      "endpoints": "Service Endpoints"
+      "endpoints": "Endpoints"
     },
+    "name": "Service Name",
     "namePlaceholder": "Please input the service name.",
     "namespacePlaceholder": "Please input the namespace."
   },
@@ -203,11 +422,15 @@
         "name": "Domains"
       }
     },
+    "protocols": {
+      "unspecified": "Unspecified"
+    },
     "columns": {
       "type": "Type",
       "name": "Name",
       "domain": "Source Domain",
       "port": "Source Port",
+      "protocol": "Service Protocol",
       "action": "Action"
     },
     "createServiceSource": "Create Service Source",
@@ -222,25 +445,27 @@
       "namePlaceholder": "Please input a valid name.",
       "domain": "Registry Domain",
       "domainTooltip": "It can be either an IP address or a domain name.",
-      "domainRequired": "Please input the registry address.",
+      "domainRequired": "Please select a domain name",
       "domainPlaceholder": "Only following inputs are allowed: upper-and lower-case letters, numbers, dash (-) and asterisk (*). No longer than 256 characters.",
       "port": "Registry Port",
       "portRequired": "Please input the port.",
       "portPlaceholder": "Registry Port",
+      "protocol": "Service Protocol",
+      "sni": "SNI",
+      "sniPlaceholderForDns": "Leave it empty if only one domain is set and to be used as SNI.",
       "zkServicesPath": "Service Registration Root Path",
       "zkServicesPathTooltip": "The root path of service registration are required for Zookeeper service sources. /dubbo and /services are listened by default. The former is the default root path of dubbo services, and the latter is the default root path of Sprin gCloud services",
-      "zkServicesPathRequired": "Please input the root path of service registration.",
       "zkServicesPathPlaceholder": "/dubbo and /services are listened by default. The former is the default root path of dubbo service, and the latter is the default root path of Spring Cloud services.",
       "nacosNamespaceId": "ID of the Nacos Namespace",
-      "nacosNamespaceIdPlaceholder": "Only following inputs are allowed: upper- and lower-case letters, numbers, underscore (_), dash (-) and asterisk (*). No longer than 256 characters.",
+      "nacosNamespaceIdPlaceholder": "Leave it empty to watch the public namespace only.",
       "nacosNamespaceIdRequired": "Please input the ID of the Nacos namespace.",
       "nacosGroups": "Nacos Service Groups",
       "nacosGroupsRequired": "Please input Nacos service groups.",
       "nacosGroupsPlaceholder": "Nacos Service Groups",
-      "consulNamespace": "Consul Namespace",
-      "consulNamespaceTooltip": "Namespace info is required for Concul service sources.",
-      "consulNamespaceRequired": "Please input Consul namespace.",
-      "consulNamespacePlaceholder": "Consul Namespace",
+      "nacos2PortNote": "The port calculated by \"PortAbove+1000\" shall be kept accessiable as well. Otherwise, the service source won't function properly.",
+      "nacos3Mode": "Service Discovery Type",
+      "nacos3ModeRegistry": "Regular Services",
+      "nacos3ModeMcp": "MCP Servers",
       "serviceStaticAddresses": "Service Addresses",
       "serviceStaticAddressesRequired": "Please input service addresses.",
       "serviceStaticAddressesPlaceholder": "IP:Port (One address per line)",
@@ -262,24 +487,34 @@
       "consulServiceTagTooltip": "You can filter services by a tag in Consul service sources.",
       "consulServiceTagPlaceholder": "e.g.: foo=bar",
       "consulToken": "Consul Token",
-      "consulTokenRequired": "Please input Consul token"
+      "consulTokenRequired": "Please input Consul token",
+      "mcpServerEnabled": "Enable MCP Server",
+      "mcpServerBaseUrl": "MCP Server Route Path Prefix",
+      "mcpServerBaseUrlRequired": "Please input MCP server route path prefix",
+      "mcpServerBaseUrlBadFormat": "Invalid MCP server route path prefix, which must begin with a \"/\".",
+      "mcpServerExportDomains": "MCP Server Domains",
+      "mcpServerExportDomainsPlaceholder": "If left empty, MCP server will be activated on any domain."
     }
   },
   "route": {
     "columns": {
       "name": "Route Name",
+      "domains": "Domain",
       "routePredicates": "Route Predicates",
       "services": "Service",
       "action": "Action"
     },
     "matchTypes": {
       "PRE": "Prefix",
-      "EQUAL": "Equal",
+      "EQUAL": "Exact",
       "REGULAR": "Regex"
     },
+    "unsupported": "Note: Route management feature doesn't support Kubenetes with version < 1.19.0 at the moment.",
     "createRoute": "Create Route",
     "editRoute": "Edit Route",
     "deleteConfirmation": "Are you sure you want to delete <1>{{currentRouteName}}</1>?",
+    "noCustomIngresses": "Note: Only routes created from the console are listed above.",
+    "routeSearchPlaceholder": "Search routes by route name, domain, routing conditions and target service.",
     "factorGroup": {
       "columns": {
         "key": "Key",
@@ -294,94 +529,43 @@
       },
       "parameter": "Parameter"
     },
+    "keyValueGroup": {
+      "columns": {
+        "key": "Key",
+        "value": "ֵValue",
+        "operation": "Action"
+      },
+      "required": {
+        "key": "Please input annotation key.",
+        "value": "Please input annotation value."
+      },
+      "config": "Annotation"
+    },
     "routeForm": {
       "routeName": "Route Name",
       "routeNameTip": "Using a name related to the business scenario is recommended. e.g.: user-default, user-gray, etc.",
       "routeNameRequired": "Only following characters are allowed: lower-case letters, numbers and special characters (- .). And the name can not begin or end with a special character.",
       "routeNamePlaceholder": "Only following characters are allowed: lower-case letters, numbers and special characters (- .). And the name can not begin or end with a special character.",
       "domain": "Domain",
-      "domainRequired": "Please select a domain.",
-      "domainSearchPlaceholder": "Search domain by name",
+      "domainSearchPlaceholder": "Search domain by name. If left empty, it will match any domain.",
       "matchType": "Match Type",
       "matchTypeTooltip": "The relation among different arguments is \"and\", which means the more rules are configured, the smaller the range to match is",
       "path": "Path",
-      "pathPredicatesRequired": "Please select a path matching predicate.",
+      "pathPredicateRequired": "Please select a path matching predicate.",
       "pathMatcherRequired": "Please input the path match target.",
       "pathMatcherPlacedholder": "Path match target. e.g.: /user",
       "caseInsensitive": "Case Insensitive",
-      "method": "Method",
-      "methodMatcherPlaceholder": "HTTP method to match. Multiple selections are allowed. If left blank, it will match all the HTTP methods.",
-      "header": "Request Header",
+      "method": "Methods",
+      "methodMatcherPlaceholder": "HTTP methods to match. Multiple selections are allowed. If left blank, it will match all the HTTP methods.",
+      "header": "Request Headers",
       "headerTooltip": "The relation among different arguments is \"and\".",
-      "query": "Query Parameter",
+      "query": "Query Parameters",
       "queryTooltip": "The relation among different arguments is \"and\".",
+      "customConfigs": "Custom Annotations",
+      "customConfigsTip": "Click this \"?\" to view the configuration guide.",
       "targetService": "Target Service",
       "targetServiceRequired": "Please choose the target service.",
-      "targetServiceNamedPlaceholder": "Search target service by name"
-    }
-  },
-  "chart": {
-    "area": {
-      "defaultData": {
-        "subTitle": "Request Count",
-        "des": "Week on Week: "
-      }
-    },
-    "bar": {
-      "defaultData": {
-        "subTitle": "Total Sales",
-        "des": "Week on Week: "
-      }
-    },
-    "groupBar": {
-      "defaultData": {
-        "title": "Consumer Data",
-        "category_1": "Category 1",
-        "category_2": "Category 2",
-        "category_3": "Category 3",
-        "category_4": "Category 4",
-        "category_5": "Category 5",
-        "shop_1": "Shop 1",
-        "shop_2": "Shop 2",
-        "shop_3": "Shop 3"
-      }
-    },
-    "line": {
-      "defaultData": {
-        "subTitle": "Stop Activity Results",
-        "des": "Week on Week: "
-      }
-    },
-    "pie": {
-      "defaultData": {
-        "title": "Sales Percentage by Category",
-        "sample_1": "Sample 1",
-        "sample_2": "Sample 2",
-        "sample_3": "Sample 3",
-        "sample_4": "Sample 4",
-        "sample_5": "Sample 5"
-      },
-      "category_1": "Category 1",
-      "category_2": "Category 2",
-      "category_3": "Category 3"
-    },
-    "rank": {
-      "defaultData": {
-        "title": "Area Sales",
-        "asia": "Asia",
-        "europe": "Europe",
-        "africa": "Africa",
-        "america": "America",
-        "category_1": "Category 1",
-        "category_2": "Category 2",
-        "des": "Week on Week"
-      }
-    },
-    "typebar": {
-      "defaultData": {
-        "subTitle": "Merchant Sales",
-        "des": "Week on Week: "
-      }
+      "targetServiceNamedPlaceholder": "Search target service by name. Multiple selections are allowed."
     }
   },
   "tlsCertificate": {
@@ -430,10 +614,24 @@
       "500": "Internal server error"
     }
   },
+  "user": {
+    "changePassword": {
+      "title": "Change Password",
+      "username": "Username",
+      "oldPassword": "Current Password",
+      "oldPasswordRequired": "Please enter the current password",
+      "newPassword": "New Password",
+      "newPasswordRequired": "Please enter the new password",
+      "confirmPassword": "Re-type New Password",
+      "confirmPasswordRequired": "Please re-type the new password here",
+      "confirmPasswordMismatched": "New password does not match. Enter new password again here.",
+      "reloginPrompt": "Password is changed successfully. Please re-login."
+    }
+  },
   "misc": {
-    "language": "Language",
     "logout": "Logout",
     "confirm": "Confirm",
+    "submit": "Submit",
     "cancel": "Cancel",
     "edit": "Edit",
     "delete": "Delete",
@@ -444,10 +642,19 @@
     "close": "Close",
     "save": "Save",
     "strategy": "Strategy",
+    "strategyList": "Strategy List",
+    "description": "Description",
     "configure": "Configure",
+    "information": "Information",
+    "action": "Action",
+    "actions": "Actions",
     "seconds": "Sec(s)",
     "tbd": "Still in development. To be released soon...",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "switchToYAML": "YAML View",
+    "switchToForm": "Form View",
+    "isRequired": "is required",
+    "invalidSchema": "Since schema information cannot be properly parsed, this plugin only supports YAML editing."
   }
 }

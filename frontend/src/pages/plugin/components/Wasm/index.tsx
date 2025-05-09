@@ -1,9 +1,7 @@
-import { WasmPluginData } from '@/interfaces/route';
+import { ImagePullPolicy, PluginPhase, WasmPluginData } from '@/interfaces/wasm-plugin';
 import { Button, Drawer, Form, Input, InputNumber, Select, Space } from 'antd';
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-
-const { Option } = Select;
 
 export interface WasmFormRef {
   open: (v?: WasmPluginData) => void;
@@ -76,10 +74,16 @@ const WasmForm = forwardRef((props: { editData?: WasmPluginData }, ref) => {
   const { t } = useTranslation();
 
   const phaseOptions = [
-    { value: 'UNSPECIFIED_PHASE', label: t('plugins.phases.unspecified') },
-    { value: 'AUTHN', label: t('plugins.phases.authn') },
-    { value: 'AUTHZ', label: t('plugins.phases.authz') },
-    { value: 'STATS', label: t('plugins.phases.stats') },
+    { value: PluginPhase.UNSPECIFIED, label: t('plugins.phases.unspecified') },
+    { value: PluginPhase.AUTHN, label: t('plugins.phases.authn') },
+    { value: PluginPhase.AUTHZ, label: t('plugins.phases.authz') },
+    { value: PluginPhase.STATS, label: t('plugins.phases.stats') },
+  ];
+
+  const imagePullPolicyOptions = [
+    { value: ImagePullPolicy.UNSPECIFIED, label: t('plugins.imagePullPolicy.unspecified') },
+    { value: ImagePullPolicy.IF_NOT_PRESENT, label: t('plugins.imagePullPolicy.ifNotPresent') },
+    { value: ImagePullPolicy.ALWAYS, label: t('plugins.imagePullPolicy.always') },
   ];
 
   const { editData } = props;
@@ -87,27 +91,37 @@ const WasmForm = forwardRef((props: { editData?: WasmPluginData }, ref) => {
   const isEdit = !!editData;
 
   if (editData) {
-    editData.imageUrl = `${editData.imageRepository}:${editData.imageVersion}`;
+    editData.imageUrl = editData.imageVersion ? `${editData.imageRepository}:${editData.imageVersion}` : editData.imageRepository;
+    editData.phase = editData.phase || PluginPhase.UNSPECIFIED;
+    editData.imagePullPolicy = editData.imagePullPolicy || ImagePullPolicy.UNSPECIFIED;
   }
+
+  const builtIn = !!(editData && editData.builtIn);
 
   const [form] = Form.useForm();
 
   const onSubmit = async () => {
-    const values = await form.validateFields();
-    const imageUrl: string = values.imageUrl || '';
-    const lastColonIndex = imageUrl.lastIndexOf(':');
-    const imageRepository = lastColonIndex === -1 ? imageUrl : imageUrl.substring(0, lastColonIndex);
-    const imageVersion = lastColonIndex === -1 ? '' : imageUrl.substring(lastColonIndex + 1);
-    return {
-      ...values,
+    const data = Object.assign({
+      version: 0,
       category: 'custom',
       builtIn: false,
-      icon: '',
-      imageRepository,
-      imageVersion,
-      title: values.name,
-      version: editData?.version || 0,
-    };
+    }, editData, await form.validateFields());
+    const imageUrl: string = data.imageUrl || '';
+    const protocolIndex = imageUrl.indexOf('://');
+    const lastColonIndex = imageUrl.lastIndexOf(':');
+    const isOciImage = protocolIndex === -1 || imageUrl.startsWith('oci://');
+    if (isOciImage && lastColonIndex > protocolIndex) {
+      data.imageRepository = imageUrl.substring(0, lastColonIndex);
+      data.imageVersion = imageUrl.substring(lastColonIndex + 1);
+    } else {
+      data.imageRepository = imageUrl;
+      data.imageVersion = '';
+    }
+    delete data.imageUrl;
+    if (!builtIn) {
+      data.title = data.name;
+    }
+    return data;
   };
 
   useImperativeHandle(ref, () => ({
@@ -131,7 +145,7 @@ const WasmForm = forwardRef((props: { editData?: WasmPluginData }, ref) => {
           <Input disabled={isEdit} placeholder={t('plugins.custom.namePlaceholder') || ''} />
         </Form.Item>
         <Form.Item label={t('plugins.custom.description')} name="description">
-          <Input.TextArea placeholder={t('plugins.custom.descriptionPlaceholder') || ''} />
+          <Input.TextArea disabled={builtIn} placeholder={t('plugins.custom.descriptionPlaceholder') || ''} />
         </Form.Item>
         <Form.Item
           label={t('plugins.custom.imageUrl')}
@@ -148,6 +162,12 @@ const WasmForm = forwardRef((props: { editData?: WasmPluginData }, ref) => {
         </Form.Item>
         <Form.Item label={t('plugins.custom.priority')} name="priority" rules={[{ required: true }]}>
           <InputNumber max={1000} min={1} style={{ width: '100%' }} placeholder={t('plugins.custom.priorityPlaceholder') || ''} />
+        </Form.Item>
+        <Form.Item label={t('plugins.custom.imagePullPolicy')} name="imagePullPolicy" rules={[{ required: true }]}>
+          <Select options={imagePullPolicyOptions} />
+        </Form.Item>
+        <Form.Item label={t('plugins.custom.imagePullSecret')} name="imagePullSecret">
+          <Input placeholder={t('plugins.custom.imagePullSecretPlaceholder') || ''} />
         </Form.Item>
       </Form>
     </div>

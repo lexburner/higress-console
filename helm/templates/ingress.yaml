@@ -1,3 +1,4 @@
+{{- if .Values.ingress.enabled -}}
 {{- $fullName := include "higress-console.name" . -}}
 {{- $svcPort := .Values.service.port -}}
 {{- if and .Values.global.ingressClass (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
@@ -19,7 +20,7 @@ metadata:
   labels:
     {{- include "higress-console.labels" . | nindent 4 }}
   annotations:
-  {{- if .Values.tlsSecretName }}
+  {{- if .Values.ingress.tlsSecretName }}
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
   {{- end }}
   {{- with .Values.ingress.annotations }}
@@ -29,11 +30,11 @@ spec:
   {{- if and .Values.global.ingressClass (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
   ingressClassName: {{ .Values.global.ingressClass }}
   {{- end }}
-  {{- if .Values.tlsSecretName }}
+  {{- if .Values.ingress.tlsSecretName }}
   tls:
     - hosts:
-        - {{ .Values.domain | quote }}
-      secretName: {{ .Values.tlsSecretName }}
+        - {{ .Values.ingress.domain | quote }}
+      secretName: {{ .Values.ingress.tlsSecretName }}
   {{- end }}
   rules:
     - http:
@@ -54,4 +55,5 @@ spec:
               servicePort: {{ $svcPort }}
               {{- end }}
           {{- end }}
-      host: {{ .Values.domain | quote }}
+      host: {{ .Values.ingress.domain | quote }}
+{{- end }}

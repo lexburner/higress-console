@@ -19,6 +19,9 @@ request.interceptors.request.use((config) => {
       ...config.headers,
     };
   }
+  if (config.method && config.method.toUpperCase() === 'GET' && config.url) {
+    config.url = `${config.url}${config.url.indexOf('?') === -1 ? '?' : '&'}ts=${Date.now()}`;
+  }
   return config;
 });
 
@@ -50,7 +53,7 @@ request.interceptors.response.use(
         }
         // Unauthorized. Jump to the login page.
         Promise.reject(error);
-        if (window.location.href.indexOf('/login') === -1) {
+        if (window.location.href.indexOf('/init') === -1 && window.location.href.indexOf('/login') === -1) {
           window.location.href = `/login?redirect=${window.location.pathname}`;
         }
         return;

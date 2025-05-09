@@ -2,6 +2,55 @@ global:
   local: false # When deploying to a local cluster (e.g.: kind cluster), set this to true.
   kind: false # Deprecated. Please use "global.local" instead. Will be removed later.
   ingressClass: "higress"
+  watchNamespace: ""
+
+  proxy:
+    # -- CAUTION: It is important to ensure that all Istio helm charts specify the same clusterDomain value
+    # cluster domain. Default value is "cluster.local".
+    clusterDomain: "cluster.local"
+
+  # Observability (o11y) configurations
+  o11y:
+    enabled: false
+    grafana:
+      replicas: 1
+      image:
+        repository: higress-registry.cn-hangzhou.cr.aliyuncs.com/higress/grafana
+        tag: 9.3.6
+      port: 3000
+      storage: 1Gi
+      pvc:
+        storageClassName: ""
+      securityContext: {}
+    prometheus:
+      replicas: 1
+      image:
+        repository: higress-registry.cn-hangzhou.cr.aliyuncs.com/higress/prometheus
+        tag: v2.40.7
+      port: 9090
+      storage: 1Gi
+      pvc:
+        storageClassName: ""
+      resources:
+        limits:
+          cpu: 500m
+          memory: 2Gi
+      securityContext: {}
+    loki:
+      replicas: 1
+      image:
+        repository: higress-registry.cn-hangzhou.cr.aliyuncs.com/higress/loki
+        tag: 2.9.4
+      ports:
+        http: 3100
+        grpc: 9095
+      storage: 1Gi
+      pvc:
+        storageClassName: ""
+      securityContext: {}
+
+  pvc:
+    rwxSupported: true
 
 replicaCount: 1
 
@@ -12,6 +61,8 @@ image:
 
 imagePullSecrets: []
 name: ""
+
+podEnvs: {}
 
 podAnnotations: {}
 
@@ -27,10 +78,10 @@ service:
   type: ClusterIP
   port: 8080
 
-domain: console.higress.io
-tlsSecretName: ""
-
 ingress:
+  enabled: false
+  domain: console.higress.io
+  tlsSecretName: ""
   annotations: {}
   paths:
     - path: /
@@ -49,53 +100,30 @@ web:
   login:
     prompt: "" # If set, a prompt message will be displayed on the login page.
 
+swagger:
+  enabled: false
+
 admin:
   username: admin
   displayName: Admin
-  password:
-    length: 8 # The length of random password generated during installation
-    value: "" # If set, the value will be used as the admin password for login, and Helm won't generate a random password.
+  password: "" # If set, the value will be used as the admin password for login.
 
 chat:
   enabled: false
   endpoint: ""
 
+controller:
+  serviceName: higress-controller
+
 certmanager:
   enabled: false
   replicas: 1
   image:
-    repository: quay.io/jetstack
+    repository: higress-registry.cn-hangzhou.cr.aliyuncs.com/higress
     tag: v1.11.0
 
 o11y:
-  enabled: false
-  grafana:
-    replicas: 1
-    image:
-      repository: grafana/grafana
-      tag: 9.3.6
-    ingress:
-      path: /grafana # Only pathType of Prefix is supported
-    port: 3000
-    storage: 1Gi
-    pvc:
-      storageClassName: ""
-  prometheus:
-    replicas: 1
-    image:
-      repository: prom/prometheus
-      tag: v2.40.7
-    ingress:
-      enabled: false # Enabling Ingress for Prometheus may pose a potential security risk to the system. DO NOT enable it unless it is absolute necessary.
-      path: /prometheus # Only pathType of Prefix is supported
-    port: 9090
-    storage: 1Gi
-    pvc:
-      storageClassName: ""
-    resources:
-      limits:
-        cpu: 500m
-        memory: 2Gi
+  __placeholder__: true
 
 pvc:
-  rwxSupported: true
+  __placeholder__: true

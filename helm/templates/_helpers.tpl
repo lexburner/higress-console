@@ -56,6 +56,10 @@ Create a default fully qualified app name for Grafana.
 {{- printf "%s-grafana" ($consoleName | trunc 55) }}
 {{- end }}
 
+{{- define "higress-console-grafana.path" -}}
+/grafana
+{{- end }}
+
 {{/*
 Create a default fully qualified app name for Prometheus.
 */}}
@@ -64,10 +68,30 @@ Create a default fully qualified app name for Prometheus.
 {{- printf "%s-prometheus" ($consoleName | trunc 52) }}
 {{- end }}
 
+{{- define "higress-console-prometheus.path" -}}
+/prometheus
+{{- end }}
+
 {{/*
 Create a default fully qualified app name for cert-manager
 */}}
 {{- define "higress-console-cert-manager.name" -}}
 {{- $consoleName := include "higress-console.name" . }}
 {{- printf "%s-cert-manager" ($consoleName | trunc 52) }}
+{{- end }}
+
+{{/*
+Create a default fully qualified app name for promtail
+*/}}
+{{- define "higress-console-promtail.name" -}}
+{{- $consoleName := include "higress-console.name" . }}
+{{- printf "%s-promtail" ($consoleName | trunc 52) }}
+{{- end }}
+
+{{/*
+Create a default fully qualified app name for loki
+*/}}
+{{- define "higress-console-loki.name" -}}
+{{- $consoleName := include "higress-console.name" . }}
+{{- printf "%s-loki" ($consoleName | trunc 52) }}
 {{- end }}

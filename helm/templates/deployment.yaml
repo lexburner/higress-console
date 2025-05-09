@@ -1,3 +1,4 @@
+{{- $o11y := merge (dict) .Values.o11y .Values.global.o11y }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -33,29 +34,49 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-            - name: JAVA_HOME
-              value: /usr/local/openjdk-18
-            - name: LANG
-              value: C.UTF-8
             - name: HIGRESS_CONSOLE_NS
               value: {{ .Release.Namespace }}
-            - name: HIGRESS_CONSOLE_ADMIN_SECRET
+            - name: HIGRESS_CONSOLE_SECRET_NAME
               value: {{ include "higress-console.name" . }}
             - name: HIGRESS_CONSOLE_CONFIG_MAP_NAME
               value: {{ include "higress-console.name" . }}
+            - name: HIGRESS_CONSOLE_SERVICE_HOST
+              value: {{ include "higress-console.name" . }}.{{ .Release.Namespace }}.svc.{{ .Values.global.proxy.clusterDomain }}
+            - name: HIGRESS_CONSOLE_SERVICE_PORT
+              value: {{ .Values.service.port | quote }}
+            - name: HIGRESS_CONSOLE_CONTROLLER_SERVICE_NAME
+              value: {{ .Values.controller.serviceName }}
             - name: HIGRESS_CONSOLE_CONTROLLER_JWT_POLICY
               value: {{ include "higress-console.controller.jwtPolicy" . }}
-            {{- if .Values.o11y.enabled }}
+            {{- if $o11y.enabled }}
             - name: HIGRESS_CONSOLE_DASHBOARD_BASE_URL
-              value: http://{{ include "higress-console-grafana.name" . }}.{{ .Release.Namespace }}:{{ .Values.o11y.grafana.port }}{{ .Values.o11y.grafana.ingress.path }}
-            - name: HIGRESS_CONSOLE_DASHBOARD_DATASOURCE_URL
-              value: http://{{ include "higress-console-prometheus.name" . }}.{{ .Release.Namespace }}:{{ .Values.o11y.prometheus.port }}{{ .Values.o11y.prometheus.ingress.path }}
+              value: http://{{ include "higress-console-grafana.name" . }}.{{ .Release.Namespace }}:{{ $o11y.grafana.port }}{{ include "higress-console-grafana.path" . }}
+            - name: HIGRESS_CONSOLE_DASHBOARD_DATASOURCE_PROM_URL
+              value: http://{{ include "higress-console-prometheus.name" . }}.{{ .Release.Namespace }}:{{ $o11y.prometheus.port }}{{ include "higress-console-prometheus.path" . }}
+            - name: HIGRESS_CONSOLE_DASHBOARD_DATASOURCE_LOKI_URL
+              value: http://{{ include "higress-console-loki.name" . }}.{{ .Release.Namespace }}:{{ $o11y.loki.ports.http }}
             {{- end }}
+            {{- if .Values.global.ingressClass }}
             - name: HIGRESS_CONSOLE_CONTROLLER_INGRESS_CLASS_NAME
               value: {{ .Values.global.ingressClass }}
+            {{- end }}
+            {{- if .Values.global.watchNamespace }}
+            - name: HIGRESS_CONSOLE_CONTROLLER_WATCHED_NAMESPACE
+              value: {{ .Values.global.watchNamespace }}
+            {{- end }}
+            - name: SPRINGDOC_API_DOCS_ENABLED
+              value: "{{ .Values.swagger.enabled }}"
+            - name: SPRINGDOC_SWAGGER_UI_ENABLED
+              value: "{{ .Values.swagger.enabled }}"
+            {{- if .Values.podEnvs }}
+            {{- range $key, $val := .Values.podEnvs }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+            {{- end }}
+            {{- end }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: 8080
               protocol: TCP
           readinessProbe:
             httpGet:

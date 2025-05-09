@@ -1,3 +1,8 @@
+import { BUILTIN_ROUTE_PLUGIN_LIST } from "@/pages/plugin/components/PluginList/constant";
+import { getRoutePluginInstances } from "@/services";
+import { message } from "antd";
+import { WasmPluginData } from "@/interfaces/wasm-plugin";
+
 export interface CorsConfig {
   allowOrigins: string[];
   allowMethods: string[];
@@ -5,6 +10,7 @@ export interface CorsConfig {
   exposeHeader: string[];
   maxAgent?: number;
   allowCredentials?: boolean;
+  enabled: boolean;
 }
 
 export interface Header {
@@ -15,6 +21,7 @@ export interface Header {
 export interface HeaderModifyConfig {
   request: HeaderModifyStageConfig;
   response: HeaderModifyStageConfig;
+  enabled: boolean;
 }
 
 export interface HeaderModifyStageConfig {
@@ -26,24 +33,29 @@ export interface HeaderModifyStageConfig {
 export interface MockConfig {
   status: number;
   url: string;
+  enabled: boolean;
 }
 export interface RateLimitConfig {
   qps: number;
+  enabled: boolean;
 }
 
 export interface RedirectConfig {
   status: number;
   url: string;
+  enabled: boolean;
 }
 
 export interface RetryConfig {
   attempt: number;
   retryOn: string;
+  enabled: boolean;
 }
 
 export interface RewriteConfig {
   path?: string;
   host?: string;
+  enabled: boolean;
 }
 
 export interface RoutePredicate {
@@ -81,7 +93,13 @@ export interface Route {
   retries?: RetryConfig;
   cors?: CorsConfig;
   headerModify?: HeaderModifyConfig;
+  authConfig?: AuthConfig;
   [propName: string]: any;
+}
+
+export interface AuthConfig {
+  enabled: boolean;
+  allowedConsumers?: string[];
 }
 
 export interface RouteResponse {
@@ -99,20 +117,43 @@ export function upstreamServiceToString(service: UpstreamService): string {
   return service.port != null ? `${name}:${service.port}` : name;
 }
 
-export interface WasmPluginData {
-  id?: string;
-  name: string;
-  version?: string;
-  category?: string;
-  title?: string;
-  description?: string;
-  icon?: string;
-  builtIn?: boolean;
-  imageRepository?: string;
-  imageVersion?: string;
-  phase?: string;
-  priority?: number;
+export const getRouteBuiltInPlugins = (route: Route): WasmPluginData[] => {
+  const PLUGIN_KEY_TO_PROPERTY: Record<string, string> = {
+    retries: 'proxyNextUpstream',
+    headerModify: 'headerControl',
+  };
 
-  resKey?: string;
-  key?: string;
+  return BUILTIN_ROUTE_PLUGIN_LIST.filter(pluginConfig => {
+    const routeProperty = PLUGIN_KEY_TO_PROPERTY[pluginConfig.key] || pluginConfig.key;
+    return route[routeProperty]?.enabled;
+  }).map(pluginConfig => ({
+    name: pluginConfig.key,
+    title: pluginConfig.title,
+    description: pluginConfig.description,
+    internal: true,
+    builtIn: true,
+    enabled: true,
+  }));
 }
+
+export const fetchPluginsByRoute = async (record: Route): Promise<WasmPluginData[]> => {
+  const data: Record<string, WasmPluginData[]> = {};
+  try {
+    const response = await getRoutePluginInstances(record.name);
+    const plugins = response.map((plugin: { pluginName: any; description: any; enabled: any; internal: any }) => {
+      return {
+        ...plugin,
+        name: plugin.pluginName,
+        enabled: plugin.enabled,
+        internal: plugin.internal,
+      };
+    });
+    data[record.name] = plugins || [];
+  } catch (error) {
+    message.error(`Failed to fetch strategies: ${error.message || error}`);
+  }
+
+  const builtInPlugins = getRouteBuiltInPlugins(record);
+  data[record.name] = data[record.name] ? data[record.name].concat(builtInPlugins) : builtInPlugins;
+  return data[record.name] || [];
+};

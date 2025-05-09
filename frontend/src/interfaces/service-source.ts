@@ -16,7 +16,6 @@ export interface ServiceSourceProperties {
   nacosNamespaceId?: string;
   nacosGroups?: string[];
   zkServicesPath?: string[];
-  consulNamespace?: string;
 }
 
 /**
@@ -40,7 +39,16 @@ export interface ServiceSourceResponse {
   total: number;
 }
 
+export interface ServiceSourceTypeConfig {
+  key: string;
+  name: string;
+  enabled?: boolean;
+  i18n?: boolean;
+  mcpSupported?: boolean;
+}
+
 export const ServiceSourceTypes = {
+  nacos3: { key: 'nacos3', name: 'Nacos 3.x', enabled: true, mcpSupported: true },
   nacos2: { key: 'nacos2', name: 'Nacos 2.x', enabled: true },
   nacos: { key: 'nacos', name: 'Nacos 1.x', enabled: true },
   zookeeper: { key: 'zookeeper', name: 'Zookeeper', enabled: true },
@@ -49,3 +57,36 @@ export const ServiceSourceTypes = {
   static: { key: 'static', name: 'serviceSource.types.static.name', i18n: true, enabled: true },
   dns: { key: 'dns', name: 'serviceSource.types.dns.name', i18n: true, enabled: true },
 };
+
+export const ServiceProtocols = {
+  unspecified: { key: '', name: 'serviceSource.protocols.unspecified', i18n: true, tlsEnabled: false },
+  http: { key: 'http', name: 'HTTP', tlsEnabled: false },
+  https: { key: 'https', name: 'HTTPS', tlsEnabled: true },
+  grpc: { key: 'grpc', name: 'gRPC', tlsEnabled: false },
+  grpcs: { key: 'grpcs', name: 'gRPCS', tlsEnabled: true },
+};
+
+interface ListEntry {
+  provider: string;
+  width: number;
+}
+
+export interface CustomComponentHandles {
+  addItem: (any) => void;
+  getList: () => ListEntry[];
+}
+
+export function isNacosType(type: string): boolean {
+  switch (type) {
+    case ServiceSourceTypes.nacos.key:
+    case ServiceSourceTypes.nacos2.key:
+    case ServiceSourceTypes.nacos3.key:
+      return true;
+    default:
+      return false;
+  }
+}
+
+export function getServiceSourceTypeConfig(key: string): ServiceSourceTypeConfig | null {
+  return ServiceSourceTypes[key] || null;
+}

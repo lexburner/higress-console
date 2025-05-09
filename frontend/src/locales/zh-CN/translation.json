@@ -13,19 +13,36 @@
     "serviceSources": "服务来源",
     "serviceList": "服务列表",
     "routeConfig": "路由配置",
+    "aiServiceManagement": "AI流量入口管理",
+    "aiRouteManagement": "AI路由管理",
+    "aiDashboard": "AI监控面板",
+    "llmProviderManagement": "AI服务提供者管理",
     "domainManagement": "域名管理",
     "certManagement": "证书管理",
-    "pluginMarket": "插件市场"
+    "consumerManagement": "消费者管理",
+    "pluginManagement": "插件配置"
   },
   "index": {
     "title": "Higress Console"
+  },
+  "init": {
+    "title": "系统初始化",
+    "header": "初始化管理员账号",
+    "usernamePlaceholder": "用户名",
+    "usernameRequired": "请输入用户名",
+    "passwordPlaceholder": "密码",
+    "passwordRequired": "请输入密码",
+    "confirmPasswordPlaceholder": "确认密码",
+    "confirmPasswordRequired": "请确认密码",
+    "confirmPasswordMismatched": "两次输入的密码不一致",
+    "initSuccess": "初始化成功，稍后将跳转至登录页面。",
+    "initFailed": "初始化操作失败。"
   },
   "login": {
     "title": "登录",
     "buttonText": "登录",
     "loginSuccess": "登录成功！",
     "loginFailed": "登录失败，请重试！",
-    "incorrectCredentials": "账户或密码错误",
     "autoLogin": "自动登录",
     "forgotPassword": "忘记密码",
     "usernamePlaceholder": "用户名",
@@ -33,14 +50,97 @@
     "passwordPlaceholder": "密码",
     "passwordRequired": "请输入密码！"
   },
+  "aiRoute": {
+    "columns": {
+      "name": "名称",
+      "domains": "域名",
+      "upstreams": "服务",
+      "auth": "请求授权",
+      "pathPredicate": "路径匹配规则",
+      "modelPredicates": "模型匹配规则"
+    },
+    "routeForm": {
+      "label": {
+        "authConfig": "是否启用请求认证",
+        "authConfigExtra": "启用后，只有包含指定消费者认证信息的请求可以请求本路由。",
+        "authConfigList": "允许请求本路由的消费者名称列表",
+        "domain": "域名",
+        "targetModel": "目标模型",
+        "fallbackConfig": "降级配置",
+        "fallbackConfigExtra": "启用后，若请求目标服务失败，网关会改为请求降级服务。",
+        "fallbackUpstream": "降级服务",
+        "name": "名称",
+        "fallbackResponseCodes": "需要降级的响应码",
+        "serviceName": "服务名称",
+        "serviceWeight": "请求比例",
+        "services": "目标AI服务",
+        "modelPredicates": "模型匹配规则"
+      },
+      "rule": {
+        "matchTypeRequired": "请选择匹配方式",
+        "matchValueRequired": "请输入匹配规则",
+        "modelNameRequired": "请输入模型名称",
+        "serviceWeightRequired": "请输入请求比例",
+        "fallbackUpstreamRequired": "请选择降级服务",
+        "fallbackResponseCodesRequired": "请选择需要降级的响应码",
+        "nameRequired": "包含小写字母、数字和以及特殊字符(- .)，且不能以特殊字符开头和结尾",
+        "targetServiceRequired": "请选择目标服务",
+        "badWeightSum": "所有服务的权重总和必须为100",
+        "noUpstreams": "至少要配置一个目标AI服务"
+      },
+      "modelMatchType": "匹配方式",
+      "modelMatchValue": "匹配条件",
+      "byModelName": "按模型名称",
+      "byWeight": "按比例",
+      "addTargetService": "添加目标AI服务",
+      "addModelPredicate": "添加模型匹配规则",
+      "selectModelService": "选择模型服务"
+    },
+    "create": "创建AI路由",
+    "edit": "编辑AI路由",
+    "deleteConfirmation": "确定删除 <1>{{currentRouteName}}</1> 吗？",
+    "authNotEnabled": "未开启认证",
+    "authEnabledWithoutConsumer": "未授权任何人访问",
+    "usage": "使用方法",
+    "aiRouteUsage": "AI路由使用方法",
+    "aiRouteUsageContent": "可使用以下命令发送请求：",
+    "searchPlaceholder": "根据路由名称、域名、路由条件和目标服务搜索路由"
+  },
+  "consumer": {
+    "columns": {
+      "name": "消费者名称",
+      "authMethods": "认证方式"
+    },
+    "create": "创建消费者",
+    "edit": "编辑消费者",
+    "deleteConfirmation": "确定删除 <1>{{currentConsumerName}}</1> 吗？",
+    "consumerForm": {
+      "name": "消费者名称",
+      "nameRequired": "请输入消费者名称",
+      "tokenSourceRequired": "请选择令牌来源",
+      "authTokenRequired": "请输入认证令牌",
+      "headerNameRequired": "请输入Header名称",
+      "paramNameRequired": "请输入参数名称"
+    },
+    "selectBEARER": "Authorization: Bearer ${value}",
+    "selectHEADER": "自定义 HTTP Header",
+    "selectQUERY": "查询参数",
+    "tokenSource": "令牌来源",
+    "authToken": "认证令牌",
+    "randomGeneration": "随机生成",
+    "headerName": "Header 名称",
+    "paramName": "参数名称",
+    "deleteSuccess": "删除成功"
+  },
   "domain": {
     "columns": {
       "name": "域名",
       "protocol": "协议",
-      "certificate": "证书",
-      "action": "操作"
+      "certificate": "证书"
     },
+    "defaultDomain": "缺省域名",
     "createDomain": "创建域名",
+    "editDomain": "编辑域名",
     "deleteConfirmation": "确定删除 <1>{{currentDomainName}}</1> 吗？",
     "domainForm": {
       "name": "域名",
@@ -82,17 +182,122 @@
       "item3": "推荐各位使用 Higress 官方提供的 Grafana 看板配置。您可填写 Grafana 中的 Prometheus 数据源 UID 获取可供导入的 JSON 配置文件。（<1>如何获取数据源 UID？</1>）",
       "item3_dataSourceId": "Prometheus 数据源 UID",
       "item3_dataSourceId_required": "请填写 Prometheus 数据源 UID",
+      "item3_templateType": "配置模板",
+      "item3_templateType_MAIN": "通用网关监控模板",
+      "item3_templateType_AI": "AI 网关监控模板",
       "item3_download": "下载配置文件",
       "item4": "强烈建议填写 Grafana 的 HTTPS URL 以确保监控面板可以在本页面内正常显示。"
     }
   },
+  "llmProvider": {
+    "columns": {
+      "type": "类型",
+      "name": "名称",
+      "tokens": "凭证"
+    },
+    "providerTypes": {
+      "openai": "OpenAI",
+      "qwen": "通义千问",
+      "moonshot": "月之暗面",
+      "ai360": "360智脑",
+      "azure": "Azure OpenAI",
+      "baichuan": "百川智能",
+      "baidu": "文心一言",
+      "claude": "Anthropic Claude",
+      "cloudflare": "Cloudflare Workers AI",
+      "cohere": "Cohere",
+      "coze": "扣子",
+      "deepl": "DeepL",
+      "deepseek": "DeepSeek",
+      "doubao": "豆包",
+      "gemini": "Google Gemini",
+      "github": "GitHub模型",
+      "groq": "Groq",
+      "hunyuan": "混元",
+      "minimax": "MiniMax",
+      "mistral": "Mistral",
+      "ollama": "Ollama",
+      "together-ai": "Together AI",
+      "stepfun": "阶跃星辰",
+      "spark": "星火",
+      "yi": "零一万物",
+      "zhipuai": "智谱AI"
+    },
+    "providerForm": {
+      "label": {
+        "type": "大模型供应商",
+        "failoverEnabled": "令牌降级",
+        "failoverEnabledExtra": "启用后，若某一认证令牌返回异常响应的数量超出网值，Higress 将暂停使用该令牌发起请求，直至后续健康检测请求连续收到一定数量的正常响应。",
+        "failureThreshold": "令牌不可用时需满足的最小连续请求失败次数",
+        "healthCheckInterval": "健康检测请求发起间隔（毫秒）",
+        "healthCheckModel": "健康检测请求使用的模型名称",
+        "healthCheckTimeout": "健康检测请求超时时间（毫秒）",
+        "protocol": "协议",
+        "serviceName": "服务名称",
+        "successThreshold": "令牌可用时需满足的最小连续健康检测成功次数",
+        "azureServiceUrl": "Azure 服务 URL",
+        "ollamaServerHost": "Ollama 服务主机名",
+        "ollamaServerPort": "Ollama 服务端口",
+        "openaiServerType": "OpenAI 服务类型",
+        "openaiCustomUrl": "自定义 OpenAI 服务 BaseURL",
+        "awsRegion": "AWS Region",
+        "awsAccessKey": "AWS Access Key ID",
+        "awsSecretKey": "AWS Secret Access Key"
+      },
+      "rules": {
+        "tokenRequired": "请输入凭证",
+        "typeRequired": "请选择大模型供应商",
+        "serviceNameRequired": "请输入服务名称",
+        "failureThresholdRequired": "请输入最小连续请求失败次数",
+        "healthCheckTimeoutRequired": "请输入健康检测请求超时时间（毫秒）",
+        "healthCheckIntervalRequired": "请输入健康检测请求发起间隔（毫秒）",
+        "healthCheckModelRequired": "请输入健康检测请求使用的模型名称",
+        "protocol": "请选择请求协议",
+        "successThresholdRequired": "请输入最小连续健康检测成功次数",
+        "azureServiceUrlRequired": "请输入 Azure 服务 URL",
+        "ollamaServerHostRequired": "请输入 Ollama 服务主机名",
+        "ollamaServerPortRequired": "请输入 Ollama 服务端口",
+        "openaiCustomUrlRequired": "请输入合法的自定义 OpenAI 服务 BaseURL",
+        "awsRegionRequired": "请输入 AWS Region",
+        "awsAccessKeyRequired": "请输入 AWS Access Key ID",
+        "awsSecretKeyRequired": "请输入 AWS Secret Access Key"
+      },
+      "placeholder": {
+        "azureServiceUrlPlaceholder": "需包含“/chat/completions”路径和“api-version”查询参数",
+        "ollamaServerHostPlaceholder": "请填写机器名、域名或 IP 地址",
+        "openaiCustomUrlPlaceholder": "示例：https://api.openai.com/v1"
+      },
+      "openaiServerType": {
+        "official": "OpenAI 官方服务",
+        "custom": "自定义服务"
+      }
+    },
+    "create": "创建AI服务提供者",
+    "edit": "编辑AI服务提供者",
+    "deleteConfirmation": "确定删除 <1>{{currentLlmProviderName}}</1> 吗？"
+  },
   "plugins": {
     "title": "策略配置",
+    "description": "策略描述",
     "subTitle": {
       "domain": "域名名称：",
-      "route": "路由名称："
+      "route": "路由名称：",
+      "aiRoute": "AI路由名称："
     },
+    "categories": {
+      "route": "路由",
+      "ai": "AI",
+      "auth": "认证",
+      "security": "安全",
+      "traffic": "流量",
+      "transform": "转换",
+      "o11y": "可观测性",
+      "custom": "自定义"
+    },
+    "enabled": "已启用",
+    "emptyPlugins": "未启用策略",
     "addPlugin": "添加插件",
+    "editPlugin": "编辑插件",
     "addSuccess": "添加成功",
     "updateSuccess": "修改成功",
     "deleteConfirmation": "是否确认删除？",
@@ -102,7 +307,7 @@
       "targetDomain": "作用域名：",
       "targetRoute": "作用路由：",
       "enableStatus": "开启状态",
-      "dataEditor": "数据编辑器 - YAML"
+      "globalConfigWarning": "注意：以上配置将会在所有域名和路由上生效。请谨慎配置。"
     },
     "builtIns": {
       "rewrite": {
@@ -129,7 +334,11 @@
         "set": "更新",
         "remove": "删除",
         "action": "操作",
-        "addNewRule": "添加新规则"
+        "addNewRule": "添加新规则",
+        "headerTypeRequired": "请选择Header类型",
+        "actionTypeRequired": "请选择操作类型",
+        "keyRequired": "请输入Header Key",
+        "valueRequired": "请输入Header Value"
       },
       "cors": {
         "allowOrigins": "允许的访问来源",
@@ -176,21 +385,31 @@
       "phase": "插件执行阶段",
       "phasePlaceholder": "执行阶段先后顺序：认证>鉴权>统计>默认",
       "priority": "插件执行优先级",
-      "priorityPlaceholder": "范围1～1000，值越大越优先"
+      "priorityPlaceholder": "范围1～1000，值越大越优先",
+      "imagePullPolicy": "插件拉取策略",
+      "imagePullSecret": "插件拉取密钥",
+      "imagePullSecretPlaceholder": ""
     },
     "phases": {
       "unspecified": "默认阶段",
       "authn": "认证阶段",
       "authz": "鉴权阶段",
       "stats": "统计阶段"
+    },
+    "imagePullPolicy": {
+      "unspecified": "默认策略",
+      "ifNotPresent": "仅本地不存在时拉取",
+      "always": "总是拉取"
     }
   },
   "service": {
     "columns": {
-      "name": "服务名称",
+      "name": "服务名称（FQDN）",
+      "port": "服务端口",
       "namespace": "命名空间",
       "endpoints": "服务地址"
     },
+    "name": "服务名称",
     "namePlaceholder": "请输入服务名称",
     "namespacePlaceholder": "请输入命名空间"
   },
@@ -203,11 +422,15 @@
         "name": "DNS域名"
       }
     },
+    "protocols": {
+      "unspecified": "未指定"
+    },
     "columns": {
       "type": "类型",
       "name": "名称",
       "domain": "来源地址",
       "port": "来源端口",
+      "protocol": "服务协议",
       "action": "操作"
     },
     "createServiceSource": "创建服务来源",
@@ -222,25 +445,27 @@
       "namePlaceholder": "支持大小写字母、数字和短划线，并以字母或数字开头，且不以短划线结尾。长度不超过63个字符。",
       "domain": "注册中心地址",
       "domainTooltip": "注册中心地址，可以是IP或域名",
-      "domainRequired": "请输入注册中心地址",
+      "domainRequired": "请选择域名",
       "domainPlaceholder": "支持大小写字母、数字、短划线（-）和星号（*），不超过256个字符。",
       "port": "注册中心访问端口",
       "portRequired": "请输入访问端口",
       "portPlaceholder": "注册中心访问端口",
+      "protocol": "服务协议",
+      "sni": "SNI",
+      "sniPlaceholderForDns": "若服务来源只关联了一个域名且使用与该域名相同的SNI，此处可留空。",
       "zkServicesPath": "服务注册根路径",
       "zkServicesPathTooltip": "Zookeeper类型的服务来源需要填写服务注册的根路径。默认监听/dubbo和/services。前者为dubbo服务默认根路径，后者为Spring Cloud服务默认根路径。",
-      "zkServicesPathRequired": "请输入服务注册根路径",
       "zkServicesPathPlaceholder": "默认监听/dubbo和/services。前者为dubbo服务默认根路径，后者为Spring Cloud服务默认根路径。",
       "nacosNamespaceId": "Nacos命名空间ID",
-      "nacosNamespaceIdPlaceholder": "支持大小写字母、数字、下划线（_）、短划线（-）和星号（*），不超过256个字符。",
+      "nacosNamespaceIdPlaceholder": "留空表示仅监听public命名空间",
       "nacosNamespaceIdRequired": "请输入Nacos命名空间ID",
       "nacosGroups": "Nacos服务分组列表",
       "nacosGroupsRequired": "请输入Nacos服务分组列表",
       "nacosGroupsPlaceholder": "Nacos服务分组列表",
-      "consulNamespace": "Consul命名空间",
-      "consulNamespaceTooltip": "Consul类型的服务来源需要填写命名空间",
-      "consulNamespaceRequired": "请输入Concul命名空间",
-      "consulNamespacePlaceholder": "Consul命名空间",
+      "nacos2PortNote": "“以上端口+1000”所得到的端口应同时保持畅通，否则本服务来源将无法正常工作。",
+      "nacos3Mode": "服务发现类型",
+      "nacos3ModeRegistry": "常规服务",
+      "nacos3ModeMcp": "MCP服务",
       "serviceStaticAddresses": "服务地址",
       "serviceStaticAddressesRequired": "请输入服务地址",
       "serviceStaticAddressesPlaceholder": "IP:Port（多个地址请以换行分隔）",
@@ -262,12 +487,19 @@
       "consulServiceTagTooltip": "Consul类型的服务来源支持通过标签来过滤服务列表",
       "consulServiceTagPlaceholder": "示例：foo=bar",
       "consulToken": "Consul Token",
-      "consulTokenRequired": "请输入Consul Token"
+      "consulTokenRequired": "请输入Consul Token",
+      "mcpServerEnabled": "是否启用MCP Server功能",
+      "mcpServerBaseUrl": "MCP Server路由路径前缀",
+      "mcpServerBaseUrlRequired": "请输入MCP Server路由路径前缀",
+      "mcpServerBaseUrlBadFormat": "MCP Server路由路径前缀格式不正确。请使用“/”开头。",
+      "mcpServerExportDomains": "关联MCP Server的域名",
+      "mcpServerExportDomainsPlaceholder": "留空表示关联全部域名"
     }
   },
   "route": {
     "columns": {
       "name": "路由名称",
+      "domains": "域名",
       "routePredicates": "路由条件",
       "services": "目标服务",
       "action": "操作"
@@ -277,9 +509,12 @@
       "EQUAL": "精确匹配",
       "REGULAR": "正则匹配"
     },
+    "unsupported": "注意：路由配置功能暂不支持版本低于1.19.0的Kubenetes。敬请谅解。",
     "createRoute": "创建路由",
     "editRoute": "编辑路由",
     "deleteConfirmation": "确定删除 <1>{{currentRouteName}}</1> 吗？",
+    "noCustomIngresses": "注：列表中仅包含通过控制台页面创建的路由配置。",
+    "routeSearchPlaceholder": "根据路由名称、域名、路由条件和目标服务搜索路由",
     "factorGroup": {
       "columns": {
         "key": "Key",
@@ -294,18 +529,29 @@
       },
       "parameter": "参数"
     },
+    "keyValueGroup": {
+      "columns": {
+        "key": "Key",
+        "value": "值",
+        "operation": "操作"
+      },
+      "required": {
+        "key": "请输入Key",
+        "value": "请输入值"
+      },
+      "config": "注解"
+    },
     "routeForm": {
       "routeName": "路由名称",
       "routeNameTip": "推荐结合业务场景命名，例如user-default、user-gray等",
       "routeNameRequired": "包含小写字母、数字和以及特殊字符(- .)，且不能以特殊字符开头和结尾",
       "routeNamePlaceholder": "包含小写字母、数字和以及特殊字符(- .)，且不能以特殊字符开头和结尾",
       "domain": "域名",
-      "domainRequired": "请选择域名",
-      "domainSearchPlaceholder": "根据域名名称搜索域名",
+      "domainSearchPlaceholder": "根据域名名称搜索域名。若留空，则表示路由可匹配任意域名",
       "matchType": "匹配规则",
       "matchTypeTooltip": "规则之间是“与”关系，即填写的规则越多，匹配的范围越小",
       "path": "路径（Path）",
-      "pathPredicatesRequired": "请选择路径匹配规则",
+      "pathPredicateRequired": "请选择路径匹配规则",
       "pathMatcherRequired": "请输入路径匹配值",
       "pathMatcherPlacedholder": "路径匹配值，如：/user",
       "caseInsensitive": "忽略大小写",
@@ -315,73 +561,11 @@
       "headerTooltip": "多个参数之间是“与”关系",
       "query": "请求参数（Query）",
       "queryTooltip": "多个参数之间是“与”关系",
+      "customConfigs": "附加注解（Annotation）",
+      "customConfigsTip": "点击问号查看注解配置说明",
       "targetService": "目标服务",
       "targetServiceRequired": "请选择目标服务",
-      "targetServiceNamedPlaceholder": "搜索服务名称选择服务"
-    }
-  },
-  "chart": {
-    "area": {
-      "defaultData": {
-        "subTitle": "访问量",
-        "des": "周同比："
-      }
-    },
-    "bar": {
-      "defaultData": {
-        "subTitle": "总销售额",
-        "des": "周同比："
-      }
-    },
-    "groupBar": {
-      "defaultData": {
-        "title": "消费数据",
-        "category_1": "品类一",
-        "category_2": "品类二",
-        "category_3": "品类三",
-        "category_4": "品类四",
-        "category_5": "品类五",
-        "shop_1": "门店一",
-        "shop_2": "门店二",
-        "shop_3": "门店三"
-      }
-    },
-    "line": {
-      "defaultData": {
-        "subTitle": "门店活动效果",
-        "des": "周同比："
-      }
-    },
-    "pie": {
-      "defaultData": {
-        "title": "销售额类别占比",
-        "sample_1": "事例一",
-        "sample_2": "事例二",
-        "sample_3": "事例三",
-        "sample_4": "事例四",
-        "sample_5": "事例五"
-      },
-      "category_1": "类目一",
-      "category_2": "类目二",
-      "category_3": "类目三"
-    },
-    "rank": {
-      "defaultData": {
-        "title": "区域销售",
-        "asia": "亚洲",
-        "europe": "欧洲",
-        "africa": "非洲",
-        "america": "美洲",
-        "category_1": "商品类目1",
-        "category_2": "商品类目2",
-        "des": "周同比"
-      }
-    },
-    "typebar": {
-      "defaultData": {
-        "subTitle": "商品销售",
-        "des": "周同比："
-      }
+      "targetServiceNamedPlaceholder": "搜索服务名称选择服务，可多选"
     }
   },
   "tlsCertificate": {
@@ -430,10 +614,24 @@
       "500": "服务器内部错误"
     }
   },
+  "user": {
+    "changePassword": {
+      "title": "修改密码",
+      "username": "用户名",
+      "oldPassword": "当前密码",
+      "oldPasswordRequired": "请输入当前密码",
+      "newPassword": "新密码",
+      "newPasswordRequired": "请输入新密码",
+      "confirmPassword": "确认新密码",
+      "confirmPasswordRequired": "请确认新密码",
+      "confirmPasswordMismatched": "两次输入的新密码不一致",
+      "reloginPrompt": "登录密码已更改，请重新登录。"
+    }
+  },
   "misc": {
-    "language": "语言",
     "logout": "退出登录",
     "confirm": "确定",
+    "submit": "提交",
     "cancel": "取消",
     "edit": "编辑",
     "delete": "删除",
@@ -444,10 +642,19 @@
     "close": "关闭",
     "save": "保存",
     "strategy": "策略",
+    "strategyList": "策略列表",
+    "description": "描述",
     "configure": "配置",
+    "information": "信息",
+    "action": "操作",
+    "actions": "操作",
     "seconds": "秒",
-    "tbd": "页面开发中，即将推出...",
+    "tbd": "功能开发中，即将推出...",
     "yes": "是",
-    "no": "否"
+    "no": "否",
+    "switchToYAML": "YAML视图",
+    "switchToForm": "表单视图",
+    "isRequired": "是必填的",
+    "invalidSchema": "由于 schema 信息无法正常解析，本插件只支持 YAML 编辑方式。"
   }
 }

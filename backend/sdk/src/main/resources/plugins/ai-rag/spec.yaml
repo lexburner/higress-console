@@ -1,0 +1,51 @@
+apiVersion: 1.0.0
+info:
+  gatewayMinVersion: ""
+  type: enterprise
+  category: ai
+  image: platform_wasm/ai-rag
+  name: ai-rag
+  title: AI RAG
+  x-title-i18n:
+    zh-CN: AI 检索增强生成
+  description: Simplify the development of RAG applications by integrating with Alibaba Cloud Vector Retrieval Service (DashVector) and optimize the generated content of large models.
+  x-description-i18n:
+    zh-CN: 通过对接阿里云向量检索服务（DashVector）简化 RAG 应用的开发，优化大模型的生成内容。
+  iconUrl: https://img.alicdn.com/imgextra/i1/O1CN018iKKih1iVx287RltL_!!6000000004419-2-tps-42-42.png
+  version: 1.0.0
+  contact:
+    name: rinfx
+spec:
+  phase: default
+  priority: 400
+  configSchema:
+    openAPIV3Schema:
+      type: object
+      example:
+        dashscope:
+          apiKey: xxxxxxxxxxxxxxxxxxxx
+          serviceName: dashscope
+          servicePort: 443
+          domain: dashscope.aliyuncs.com
+        dashvector:
+          apiKey: xxxxxxxxxxxxxxxxxxxx
+          serviceName: dashvector
+          servicePort: 443
+          domain: vrs-cn-xxxxxxxxxxxxxxxxxxxx.dashvector.cn-hangzhou.aliyuncs.com
+          collection: news_embedings
+  routeConfigSchema:
+    openAPIV3Schema:
+      type: object
+      example:
+        dashscope:
+          apiKey: xxxxxxxxxxxxxxxxxxxx
+          serviceName: dashscope
+          servicePort: 443
+          domain: dashscope.aliyuncs.com
+        dashvector:
+          apiKey: xxxxxxxxxxxxxxxxxxxx
+          serviceName: dashvector
+          servicePort: 443
+          domain: vrs-cn-xxxxxxxxxxxxxxxxxxxx.dashvector.cn-hangzhou.aliyuncs.com
+          collection: news_embedings
+

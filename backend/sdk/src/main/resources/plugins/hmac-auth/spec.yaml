@@ -1,0 +1,41 @@
+apiVersion: 1.0.0
+info:
+  gatewayMinVersion: ""
+  type: enterprise
+  category: auth
+  name: hmac-auth
+  image: platform_wasm/hmac-auth
+  title: HMAC Auth
+  x-title-i18n:
+    zh-CN: HMAC 认证
+  description: Generate a unforgeable signatures using HMAC algorithms and perform authentication and authorization with it.
+  x-description-i18n:
+    zh-CN: 基于 HMAC 算法为 HTTP 请求生成不可伪造的签名，并基于签名实现身份认证和鉴权。
+  iconUrl: https://img.alicdn.com/imgextra/i4/O1CN01BPFGlT1pGZ2VDLgaH_!!6000000005333-2-tps-42-42.png
+  version: 1.0.0
+  contact:
+    name: Higress Team
+    url: http://higress.io/
+    email: admin@higress.io
+spec:
+  phase: AUTHN
+  priority: 330
+  routeConfigSchema:
+    openAPIV3Schema:
+      type: object
+      example:
+        allows:
+        - consumer-1
+        - consumer-2        
+  configSchema:
+    openAPIV3Schema:
+      type: object
+      example:
+        global_auth: false
+        consumers:
+          - key: appKey-example-1
+            secret: appSecret-example-1
+            name: consumer-1
+          - key: appKey-example-2
+            secret: appSecret-example-2
+            name: consumer-2
